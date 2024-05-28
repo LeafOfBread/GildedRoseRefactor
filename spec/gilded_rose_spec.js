@@ -18,5 +18,23 @@ describe("Gilded Rose", function() {
     const items = gildedRose.updateQuality();
     expect(items[0].quality).toEqual(0);
   });
+  it("should increase the quality of Aged Brie as it gets older", function() {
+    const gildedRose = new Shop([ new Item("Aged Brie", 10, 20) ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(21);
+  });
+
+  it("should not increase the quality of any item above 50", function() {
+    const gildedRose = new Shop([ new Item("Aged Brie", 10, 50) ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(50);
+  });
+
+  it("should not decrease the quality or sellIn of Sulfuras", function() {
+    const gildedRose = new Shop([ new Item("Sulfuras, Hand of Ragnaros", 10, 80) ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toEqual(10);
+    expect(items[0].quality).toEqual(80);
+  });
 
 });
