@@ -1,3 +1,11 @@
+class Item {
+  constructor(name, sellIn, quality) {
+    this.name = name;
+    this.sellIn = sellIn;
+    this.quality = quality;
+  }
+}
+
 class Shop {
   constructor(items = []) {
     this.items = items;
@@ -5,35 +13,34 @@ class Shop {
 
   updateQuality() {
     this.items.forEach(item => {
-      this.updateItemQuality(item);
-    });
-    return this.items;
-  }
+      if (this.isLegendaryItem(item)) return;
 
-  updateItemQuality(item) {
-    if (this.isLegendaryItem(item)) return;
-    
-    item.sellIn -= 1;
-    switch (item.name) {
-      case 'Aged Brie':
-        this.updateAgedBrieQuality(item);
-        break;
-      case 'Backstage passes to a TAFKAL80ETC concert':
-        this.updateBackstagePassQuality(item);
-        break;
-      default:
-        this.updateNormalItemQuality(item);
-        break;
-    }
-    if (item.sellIn < 0) {
-      if (item.name === 'Aged Brie') {
-        this.increaseQuality(item);
-      } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
-        item.quality = 0;
-      } else {
-        this.updateNormalItemQuality(item);
+      item.sellIn -= 1;
+
+      switch (item.name) {
+        case 'Aged Brie':
+          this.updateAgedBrieQuality(item);
+          break;
+        case 'Backstage passes to a TAFKAL80ETC concert':
+          this.updateBackstagePassQuality(item);
+          break;
+        default:
+          this.updateNormalItemQuality(item);
+          break;
       }
-    }
+
+      if (item.sellIn < 0) {
+        if (item.name === 'Aged Brie') {
+          this.increaseQuality(item);
+        } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
+          item.quality = 0;
+        } else {
+          this.decreaseQuality(item);
+        }
+      }
+    });
+
+    return this.items;
   }
 
   isLegendaryItem(item) {
@@ -78,3 +85,10 @@ class Shop {
 }
 
 Shop.MAX_QUALITY = 50;
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    Item,
+    Shop
+  };
+}
