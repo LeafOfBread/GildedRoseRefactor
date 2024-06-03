@@ -14,9 +14,19 @@ class Shop {
   updateQuality() {
     this.items.forEach(item => {
       if (this.isLegendaryItem(item)) return;
-
+  
+      // Set quality to 0 if it's initially negative
+      if (item.quality < 0) {
+        item.quality = 0;
+      }
+  
+      // Set quality to 50 if it's initially above 50
+      if (item.quality > 50) {
+        item.quality = 50;
+      }
+  
       item.sellIn -= 1;
-
+  
       switch (item.name) {
         case 'Aged Brie':
           this.updateAgedBrieQuality(item);
@@ -28,18 +38,18 @@ class Shop {
           this.updateNormalItemQuality(item);
           break;
       }
-
+  
       if (item.sellIn < 0) {
         if (item.name === 'Aged Brie') {
           this.increaseQuality(item);
         } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
           item.quality = 0;
         } else {
-          this.decreaseQuality(item);
+          this.updateNormalItemQuality(item);
         }
       }
     });
-
+  
     return this.items;
   }
 
@@ -65,9 +75,14 @@ class Shop {
   }
 
   updateNormalItemQuality(item) {
-    this.decreaseQuality(item);
     if (item.sellIn < 0) {
-      this.decreaseQuality(item);
+      item.quality -= 2;
+    } else {
+      item.quality -= 1;
+    }
+  
+    if (item.quality < 0) {
+      item.quality = 0;
     }
   }
 

@@ -59,6 +59,24 @@ describe("Gilded Rose", function() {
   it("should decrease the quality of a normal item twice as fast after the sell by date", function() {
     const gildedRose = new Shop([ new Item("foo", 0, 20) ]);
     const items = gildedRose.updateQuality();
-    expect(items[0].quality).toEqual(17);
+    expect(items[0].quality).toEqual(16);
+  });
+  it("should handle negative sellIn values", function() {
+    const gildedRose = new Shop([ new Item("foo", -1, 20) ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toEqual(-2);
+    expect(items[0].quality).toEqual(16);
+  });
+  
+  it("should handle initial quality above 50", function() {
+    const gildedRose = new Shop([ new Item("Aged Brie", 10, 55) ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(50);
+  });
+  
+  it("should handle initial quality below 0", function() {
+    const gildedRose = new Shop([ new Item("foo", 10, -10) ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toEqual(0);
   });
 });
